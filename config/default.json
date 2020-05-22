@@ -1,3 +1,4 @@
 {
-    "mongoURI":"mongodb+srv://admin:admin12345@yoomconnector-3hl5p.mongodb.net/yoomCareMasterDB?retryWrites=true&w=majority"
+    "mongoURI":"mongodb+srv://admin:admin12345@yoomconnector-3hl5p.mongodb.net/yoomCareMasterDB?retryWrites=true&w=majority",
+     "jwtSecret":"yoomCareWebToken"
 }
