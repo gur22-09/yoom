@@ -11,7 +11,10 @@ const User = require('../../models/User');
 //@access  public
 //test route
 router.post('/',[
-    check('name','Name is required').not().isEmpty(),
+    check('fname','First Name is required').not().isEmpty(),
+    check('lname','Last name is required').not().isEmpty(),
+    check('username','Plese enter a valid username').not().isEmpty(),
+    check('phoneNumber','Enter a valid Phone number').isMobilePhone(),
     check('email','Please add a Valid Email').isEmail(),
     check('password','Password must contain atleast 5 characters').isLength({min:5})
 ],async(req,res)=>{
@@ -20,17 +23,21 @@ router.post('/',[
    if(!errors.isEmpty()){
        return res.status(400).json({errors:errors.array()});
    }
-   const { name,email,password } = req.body;
+   const { fname,email,password,lname,phoneNumber,address,username } = req.body;
    
    try{
-    let user = User.findOne({email});
+    let user = await User.findOne({email});
     
     if(user){
-        res.status(400).json({errors:[{msg:'User already exists'}]})
+       return  res.status(400).json({errors:[{msg:'User already exists'}]});
     }
 
     user = new User({
-        name,
+        fname,
+        lname,
+        username,
+        phoneNumber,
+        address,
         email,
         password
     });
@@ -45,7 +52,7 @@ router.post('/',[
     res.send('user registered');
    }catch(err){
     console.error(err.message);
-    res.send('server error');
+    res.status(500).send('server error');
    }
    
 });
