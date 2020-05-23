@@ -62,7 +62,7 @@ export default makeStyles(theme => ({
     marginTop: theme.spacing(4),
   },
   subGreeting: {
-    fontWeight: 500,
+    fontWeight: 300,
     textAlign: "center",
     marginTop: theme.spacing(2),
   },
@@ -90,6 +90,7 @@ export default makeStyles(theme => ({
   createAccountButton: {
     height: 46,
     textTransform: "none",
+    cursor:"pointer"
   },
   formDividerContainer: {
     marginTop: theme.spacing(4),

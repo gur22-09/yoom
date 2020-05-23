@@ -9,6 +9,8 @@ import {
   TextField,
   Fade,
 } from "@material-ui/core";
+import MuiPhoneNumber from 'material-ui-phone-number';
+import axios from 'axios';
 import { withRouter } from "react-router-dom";
 import classnames from "classnames";
 
@@ -29,13 +31,47 @@ function Login(props) {
   var userDispatch = useUserDispatch();
 
   // local
-  var [isLoading, setIsLoading] = useState(false);
-  var [error, setError] = useState(null);
-  var [activeTabId, setActiveTabId] = useState(0);
-  var [nameValue, setNameValue] = useState("");
-  var [loginValue, setLoginValue] = useState("");
-  var [passwordValue, setPasswordValue] = useState("");
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [activeTabId, setActiveTabId] = useState(0);
+  const [loginValue, setLoginValue] = useState("");
+  const [passwordValue,setPasswordValue]=useState("");
+  const [formData,setFormData] = useState({
+    fname:'',
+    lname:'',
+    phoneNumber:'',
+    email:'',
+    address:'',
+    password:''
+  });
+  const {fname,lname,phoneNumber,address,password,email} = formData;
+  const onChange = (e)=>{
+    const {name,value} = e.target
+    setFormData({...formData,[name]:value});
+  }
+  const onSubmit = async (e)=>{
+    e.preventDefault();
+    const newUser={
+      fname,
+      lname,
+      phoneNumber,
+      address,
+      password,
+      email
+    }
+    try{
+        const config={
+          headers:{
+            'Content-Type':'application/json'
+          }
+        }
+        const body = JSON.stringify(newUser);
+        const res = await axios.post('http://localhost:4000/api/users',body,config);
+        console.log(res.data);
+    }catch(err){
+        console.log(err);
+    }
+  }
   return (
     <Grid container className={classes.container}>
       <div className={classes.logotypeContainer}>
@@ -68,11 +104,16 @@ function Login(props) {
                 <Typography className={classes.formDividerWord}>or</Typography>
                 <div className={classes.formDivider} />
               </div>
-              <Fade in={error}>
-                <Typography color="secondary" className={classes.errorMessage}>
+              {
+                error?
+                <Fade in={error}>
+                 <Typography color="secondary" className={classes.errorMessage}>
                   Something is wrong with your login or password :(
-                </Typography>
-              </Fade>
+                 </Typography>
+                </Fade>
+                :
+                null
+              }
               <TextField
                 id="email"
                 InputProps={{
@@ -88,6 +129,7 @@ function Login(props) {
                 type="email"
                 fullWidth
               />
+              
               <TextField
                 id="password"
                 InputProps={{
@@ -140,57 +182,97 @@ function Login(props) {
           )}
           {activeTabId === 1 && (
             <React.Fragment>
-              <Typography variant="h1" className={classes.greeting}>
-                Welcome!
+              <Typography variant="h1" className={classes.subGreeting}>
+               Create your account
               </Typography>
-              <Typography variant="h2" className={classes.subGreeting}>
-                Create your account
-              </Typography>
-              <Fade in={error}>
-                <Typography color="secondary" className={classes.errorMessage}>
-                  Something is wrong with your login or password :(
-                </Typography>
-              </Fade>
+              {
+                error?
+                <Fade in={error}>
+                 <Typography color="secondary" className={classes.errorMessage}>
+                   Something is wrong with your login or password :(
+                 </Typography>
+                </Fade>
+              :
+              null
+              }
+              
               <TextField
-                id="name"
+                name="fname"
                 InputProps={{
                   classes: {
                     underline: classes.textFieldUnderline,
                     input: classes.textField,
                   },
                 }}
-                value={nameValue}
-                onChange={e => setNameValue(e.target.value)}
+                value={fname}
+                onChange={e => onChange(e)}
                 margin="normal"
-                placeholder="Full Name"
+                placeholder="First Name"
                 type="text"
                 fullWidth
               />
               <TextField
-                id="email"
+                name="lname"
                 InputProps={{
                   classes: {
                     underline: classes.textFieldUnderline,
                     input: classes.textField,
                   },
                 }}
-                value={loginValue}
-                onChange={e => setLoginValue(e.target.value)}
+                value={lname}
+                onChange={e => onChange(e)}
+                margin="normal"
+                placeholder="Last Name"
+                type="text"
+                fullWidth
+              />
+              <TextField
+                name="email"
+                InputProps={{
+                  classes: {
+                    underline: classes.textFieldUnderline,
+                    input: classes.textField,
+                  },
+                }}
+                value={email}
+                onChange={e => onChange(e)}
                 margin="normal"
                 placeholder="Email Adress"
                 type="email"
                 fullWidth
               />
+              <MuiPhoneNumber 
+               defaultCountry={'in'} 
+               value={phoneNumber} 
+               regions={'asia'}
+               name='phoneNumber' 
+               onKeyDown={e=>onChange(e)}/>
               <TextField
-                id="password"
+                name='address'
                 InputProps={{
                   classes: {
                     underline: classes.textFieldUnderline,
                     input: classes.textField,
                   },
                 }}
-                value={passwordValue}
-                onChange={e => setPasswordValue(e.target.value)}
+                value={address}
+                onChange={e => onChange(e)}
+                margin="normal"
+                placeholder="Your Address"
+                multiline
+                type="text"
+                fullWidth
+              />
+              <TextField
+                name="password"
+                InputProps={{
+                  classes: {
+                    underline: classes.textFieldUnderline,
+                    input: classes.textField,
+                  },
+                }}
+                value={password}
+                onChange={e => onChange(e)}
                 margin="normal"
                 placeholder="Password"
                 type="password"
@@ -201,20 +283,17 @@ function Login(props) {
                   <CircularProgress size={26} />
                 ) : (
                   <Button
-                    onClick={() =>
-                      loginUser(
-                        userDispatch,
-                        loginValue,
-                        passwordValue,
-                        props.history,
-                        setIsLoading,
-                        setError,
-                      )
+                    onClick={(e) =>
+                      onSubmit(e)
                     }
                     disabled={
-                      loginValue.length === 0 ||
-                      passwordValue.length === 0 ||
-                      nameValue.length === 0
+                      
+                      password.length === 0 ||
+                      fname.length === 0 ||
+                      lname.length === 0  ||
+                      phoneNumber.length === 0 ||
+                      email.length === 0 ||
+                      address.length === 0 
                     }
                     size="large"
                     variant="contained"
@@ -226,7 +305,7 @@ function Login(props) {
                   </Button>
                 )}
               </div>
-              <div className={classes.formDividerContainer}>
+              <div className={classes.formDividerContainer} style={{marginBottom:'0',marginTop:'5px'}}>
                 <div className={classes.formDivider} />
                 <Typography className={classes.formDividerWord}>or</Typography>
                 <div className={classes.formDivider} />
@@ -237,6 +316,7 @@ function Login(props) {
                   classes.googleButton,
                   classes.googleButtonCreating,
                 )}
+                
               >
                 <img src={google} alt="google" className={classes.googleIcon} />
                 &nbsp;Sign in with Google
@@ -244,8 +324,9 @@ function Login(props) {
             </React.Fragment>
           )}
         </div>
+        
         <Typography color="primary" className={classes.copyright}>
-          © 2014-2019 Yoomcare, LLC. All rights reserved.
+          © 2014-2020 Yoomcare, LLC. All rights reserved.
         </Typography>
       </div>
      
@@ -254,3 +335,15 @@ function Login(props) {
 }
 
 export default withRouter(Login);
+
+
+/*
+loginUser(
+                        userDispatch,
+                        loginValue,
+                        passwordValue,
+                        props.history,
+                        setIsLoading,
+                        setError,
+                      ) 
+*/
