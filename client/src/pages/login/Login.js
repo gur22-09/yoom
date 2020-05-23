@@ -22,13 +22,17 @@ import logo from "./logo.svg";
 import google from "../../images/google.svg";
 
 // context
-import { useUserDispatch, loginUser } from "../../context/UserContext";
 
-function Login(props) {
+//Redux
+import {connect} from 'react-redux';
+import {compose} from 'redux';
+import {register} from '../../redux/User/user-actions';
+
+function Login({history,register}) {
   var classes = useStyles();
 
-  // global
-  var userDispatch = useUserDispatch();
+ 
+  
 
   // local
   const [isLoading, setIsLoading] = useState(false);
@@ -49,29 +53,11 @@ function Login(props) {
     const {name,value} = e.target
     setFormData({...formData,[name]:value});
   }
-  const onSubmit = async (e)=>{
+  const onSubmit =  (e)=>{
     e.preventDefault();
     console.log(formData)
-    const newUser={
-      fname,
-      lname,
-      phoneNumber,
-      address,
-      password,
-      email
-    }
-    try{
-        const config={
-          headers:{
-            'Content-Type':'application/json'
-          }
-        }
-        const body = JSON.stringify(newUser);
-        const res = await axios.post('http://localhost:4000/api/usersLogin',body,config);
-        console.log(res);
-    }catch(err){
-        console.log(err);
-    }
+    register(formData);
+    
   }
   return (
     <Grid container className={classes.container}>
@@ -153,16 +139,6 @@ function Login(props) {
                   <Button
                     disabled={
                       loginValue.length === 0 || passwordValue.length === 0
-                    }
-                    onClick={() =>
-                      loginUser(
-                        userDispatch,
-                        loginValue,
-                        passwordValue,
-                        props.history,
-                        setIsLoading,
-                        setError,
-                      )
                     }
                     variant="contained"
                     color="primary"
@@ -335,7 +311,14 @@ function Login(props) {
   );
 }
 
-export default withRouter(Login);
+const mapDispatchToProps = dispatch=>({
+  register:()=>dispatch(register())
+})
+
+export default compose(
+  withRouter,
+  connect(null,mapDispatchToProps)
+)(Login);
 
 
 /*

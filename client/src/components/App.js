@@ -11,12 +11,17 @@ import Login from "../pages/login";
 // context
 import { useUserState } from "../context/UserContext";
 
-export default function App() {
+//Redux
+
+import {connect} from 'react-redux';
+
+const  App =(props)=>{
   // global
-  var { isAuthenticated } = useUserState();
+  var { isAuthenticated } = props;
 
   return (
-    <HashRouter>
+    
+      <HashRouter>
       <Switch>
         <Route exact path="/" render={() => <Redirect to="/app/dashboard" />} />
         <Route
@@ -28,7 +33,8 @@ export default function App() {
         <PublicRoute path="/login" component={Login} />
         <Route component={Error} />
       </Switch>
-    </HashRouter>
+     </HashRouter>
+   
   );
 
   // #######################################################################
@@ -74,3 +80,9 @@ export default function App() {
     );
   }
 }
+
+const mapStateToProps = (state)=>({
+  isAuthenticated:state.user.isAuthenticated
+})
+
+export default connect(mapStateToProps,null)(App);
