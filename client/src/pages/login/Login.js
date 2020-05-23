@@ -51,6 +51,7 @@ function Login(props) {
   }
   const onSubmit = async (e)=>{
     e.preventDefault();
+    console.log(formData)
     const newUser={
       fname,
       lname,
@@ -66,8 +67,8 @@ function Login(props) {
           }
         }
         const body = JSON.stringify(newUser);
-        const res = await axios.post('http://localhost:4000/api/users',body,config);
-        console.log(res.data);
+        const res = await axios.post('http://localhost:4000/api/usersLogin',body,config);
+        console.log(res);
     }catch(err){
         console.log(err);
     }

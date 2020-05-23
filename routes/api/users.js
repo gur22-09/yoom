@@ -9,14 +9,13 @@ const {check,validationResult} = require('express-validator');
 const User = require('../../models/User');
 
 
-//@route   POST api/users
+//@route   POST api/usersLogin
 //@access  public
 //test route
 router.post('/',[
     check('fname','First Name is required').not().isEmpty(),
     check('lname','Last name is required').not().isEmpty(),
-    check('username','Plese enter a valid username').not().isEmpty(),
-    check('phoneNumber','Enter a valid Phone number').isMobilePhone(),
+    check('phoneNumber','Enter a valid Phone number').isLength({min:10}),
     check('email','Please add a Valid Email').isEmail(),
     check('password','Password must contain atleast 5 characters').isLength({min:5})
 ],async(req,res)=>{
@@ -25,7 +24,7 @@ router.post('/',[
    if(!errors.isEmpty()){
        return res.status(400).json({errors:errors.array()});
    }
-   const { fname,email,password,lname,phoneNumber,address,username } = req.body;
+   const { fname,email,password,lname,phoneNumber,address} = req.body;
    
    try{
     let user = await User.findOne({email});
@@ -37,7 +36,6 @@ router.post('/',[
     user = new User({
         fname,
         lname,
-        username,
         phoneNumber,
         address,
         email,
