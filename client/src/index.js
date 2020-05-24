@@ -15,10 +15,14 @@ import  {store} from './redux/store';
 ReactDOM.render(
 
     <Provider store={store}>
-      <ThemeProvider theme={Themes.default}>
-        <CssBaseline />
-        <App />
-      </ThemeProvider>
+      <LayoutProvider>
+       <UserProvider>
+       <ThemeProvider ThemeProvider theme={Themes.default}>
+         <CssBaseline />
+         <App />
+       </ThemeProvider>
+       </UserProvider>
+      </LayoutProvider>
     </Provider>
  ,
   document.getElementById("root"),

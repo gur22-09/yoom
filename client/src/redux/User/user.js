@@ -13,6 +13,7 @@ export const userReducer = (state=initialState,action)=>{
     
   switch (type) {
       case userActionTypes.REGISTRATION_SUCCESS:
+      case userActionTypes.LOGIN_SUCCESS:
           localStorage.setItem('token',payload.token);
           return{
               ...state,
@@ -21,7 +22,8 @@ export const userReducer = (state=initialState,action)=>{
               loading:false
           }
       case userActionTypes.REGISTRATION_FAIL:
-      case userActionTypes.USER_LOADED_FAILED:    
+      case userActionTypes.USER_LOADED_FAILED:
+      case userActionTypes.LOGIN_FAIL:        
           localStorage.removeItem('token');
           return{
               ...state,

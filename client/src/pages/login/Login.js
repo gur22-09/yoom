@@ -10,7 +10,6 @@ import {
   Fade,
 } from "@material-ui/core";
 import MuiPhoneNumber from 'material-ui-phone-number';
-import axios from 'axios';
 import { withRouter } from "react-router-dom";
 import classnames from "classnames";
 
@@ -27,8 +26,9 @@ import google from "../../images/google.svg";
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import {register} from '../../redux/User/user-actions';
+import {login} from '../../redux/User/user-actions';
 
-function Login({history,register}) {
+function Login({history,register,login}) {
   var classes = useStyles();
 
  
@@ -58,6 +58,10 @@ function Login({history,register}) {
     console.log(formData)
     register(formData);
     
+  }
+  const onLogin = (e)=>{
+    e.preventDefault();
+    login(loginValue,passwordValue);
   }
   return (
     <Grid container className={classes.container}>
@@ -143,6 +147,7 @@ function Login({history,register}) {
                     variant="contained"
                     color="primary"
                     size="large"
+                    onClick={onLogin}
                   >
                     Login
                   </Button>
@@ -312,8 +317,9 @@ function Login({history,register}) {
 }
 
 const mapDispatchToProps = dispatch=>({
-  register:(formData)=>dispatch(register(formData))
-})
+  register:(formData)=>dispatch(register(formData)),
+  login:(email,password)=>dispatch(login(email,password))
+});
 
 export default compose(
   withRouter,
