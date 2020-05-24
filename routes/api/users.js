@@ -20,7 +20,7 @@ router.post('/',[
     check('password','Password must contain atleast 5 characters').isLength({min:5})
 ],async(req,res)=>{
    const errors = validationResult(req);
-
+   console.log(req.body);
    if(!errors.isEmpty()){
        return res.status(400).json({errors:errors.array()});
    }

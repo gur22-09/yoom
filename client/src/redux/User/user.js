@@ -21,6 +21,7 @@ export const userReducer = (state=initialState,action)=>{
               loading:false
           }
       case userActionTypes.REGISTRATION_FAIL:
+      case userActionTypes.USER_LOADED_FAILED:    
           localStorage.removeItem('token');
           return{
               ...state,
@@ -28,8 +29,14 @@ export const userReducer = (state=initialState,action)=>{
               isAuthenticated:false,
               loading:false
           }
-      
+      case userActionTypes.USER_LOADED_SUCCESS:
+          return{
+              ...state,
+              isAuthenticated:true,
+              loading:false,
+              user:payload
+          }
       default:
           return state;
-  }
+    }
 }

@@ -10,14 +10,17 @@ import { LayoutProvider } from "./context/LayoutContext";
 import { UserProvider } from "./context/UserContext";
 
 import {Provider} from 'react-redux';
-import {store} from './redux/store';
+import  {store} from './redux/store';
+
 ReactDOM.render(
- <Provider store={store}>
-    <ThemeProvider theme={Themes.default}>
+
+    <Provider store={store}>
+      <ThemeProvider theme={Themes.default}>
         <CssBaseline />
         <App />
       </ThemeProvider>
- </Provider>,
+    </Provider>
+ ,
   document.getElementById("root"),
 );
 

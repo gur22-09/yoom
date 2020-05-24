@@ -312,7 +312,7 @@ function Login({history,register}) {
 }
 
 const mapDispatchToProps = dispatch=>({
-  register:()=>dispatch(register())
+  register:(formData)=>dispatch(register(formData))
 })
 
 export default compose(
